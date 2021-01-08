@@ -50,30 +50,75 @@ void BGP_new_connection(uint32_t ipv4_address){
 	
 }
 
+int BGP_open_message_check(struct bgp_open *msg, uint32_t ipv4_address){
+	
+	u_int8_t	neighbor_id;
+	u_int8_t	open_version;
+	u_int16_t	open_asn;
+	u_int16_t	open_holdTimer;
+	u_int32_t	open_id;
+	
+	printf("BGP_open_message_check()\n");
+	
+	if( neighbor_id = config_get_neighbor(ipv4_address) == 0){
+		printf("BGP_open_message_check(): no valid neighbor config\n");
+		return -1;	
+	}
+	
+	open_asn = config_get_asn();
+	open_version = config_get_version();
+	open_id = config_get_id();
+	
+	if(open_version != msg->open_version){
+		printf("BGP_open_message_check(): invalid open message version\n");
+		return -1;
+	}
+	if(open_id == msg->open_id){
+		printf("BGP_open_message_check(): same router id\n");
+		return -1;
+	}
+	
+	return 1;
+}
+
 struct packet* BGP_active(struct packet *p,struct bgp_neighbor *neighbor_p){
 	
 	printf("BGP_active()\n");
 	struct bgp_hdr hdr = {0};
-
-	decodeBGPHeader(p,&hdr);
-
-	printf("BGP header:\n");
-	printf("BGP len=%02X\n",hdr.bgp_len);
-	printf("BGP type=%02X\n",hdr.bgp_type);
+	decode_bgp_header(p,&hdr);
 	
-	if(hdr.bgp_type == 1){
+	if(hdr.bgp_type == 0x1){
 		
 		struct bgp_open open_message = {0};
 		
-		decodeBGPOpen(p,&open_message);
-		
+		decode_bgp_open(p,&open_message);
 		printf("BGP Open\n");
 		printf("BGP Open ASN =%02X\n",open_message.open_asn);
 		printf("BGP Open Hold Time =%02X\n",open_message.open_holdTimer);
-		//decode
+		
+		
+		if(BGP_open_message_check(&hdr,neighbor_p->ip_address)){
+			
+			
+		}
+		
 		
 	}
+	
+	
 	return NULL;
+	
+}
+struct packet* BGP_open_confirm(struct packet *p,struct bgp_neighbor *neighbor_p){
+	
+	
+	
+}
+
+
+struct packet* BGP_established(struct packet *p,struct bgp_neighbor *neighbor_p){
+	
+	
 	
 }
 /*
@@ -141,25 +186,12 @@ void BGP_event_send(){
 	
 }
 
-struct packet* processPacket(struct packet *p, unsigned int size){
-	
-	struct bgp_hdr bgp = {0};
-	printf("decode\n");
-	decodeBGPHeader(p,&bgp);
-	printf("decode end \n");
-	printf("BGP header:\n");
-	printf("BGP len=%02X\n",bgp.bgp_len);
-	printf("BGP type=%02X\n",bgp.bgp_type);
-	
-	return NULL;
-	
-}
 
 
 int main(void)
 {
 	printf("Simple BGP by Rafael P.\n");
-	//if(initConfig()){ perror("Config File Error\n"); return 0; }
+	if(init_config()){ perror("init_config() error\n"); return 0; }
 	connectionPool();
     return 0;
 }

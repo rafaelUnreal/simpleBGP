@@ -60,7 +60,7 @@ static struct enconding_rule encoding_bgp_open[] = {
 
 
 
-void encodeFields(struct packet *p, int field, u_int32_t offset, void *s ){
+void encode_fields(struct packet *p, int field, u_int32_t offset, void *s ){
 	
 	unsigned char *byteArray = (unsigned char *) s;
 	int i;
@@ -126,7 +126,7 @@ void encodeFields(struct packet *p, int field, u_int32_t offset, void *s ){
 	}	
 }
 
-void encodeBGPHeader(struct packet *p, struct bgp_hdr *bgp)
+void encode_bgp_header(struct packet *p, struct bgp_hdr *bgp)
 {
 	u_int16_t size;
 	u_int16_t i;
@@ -135,12 +135,12 @@ void encodeBGPHeader(struct packet *p, struct bgp_hdr *bgp)
 	for(i=0; i < size; i++){
 		//printf("offset of %d \n" ,  encodings[i].offset);
 		//printf("isa length: %d \n", isa->isa_length);
-		encodeFields(p,encoding_bgp_hdr[i].type, encoding_bgp_hdr[i].offset, bgp);
+		encode_fields(p,encoding_bgp_hdr[i].type, encoding_bgp_hdr[i].offset, bgp);
 		
 	}	
 }
 
-void encodeBGPOpen(struct packet *p, struct bgp_open *bgp)
+void encode_bgp_open(struct packet *p, struct bgp_open *bgp)
 {
 	u_int16_t size;
 	u_int16_t i;
@@ -149,14 +149,14 @@ void encodeBGPOpen(struct packet *p, struct bgp_open *bgp)
 	for(i=0; i < size; i++){
 		//printf("offset of %d \n" ,  encodings[i].offset);
 		//printf("isa length: %d \n", isa->isa_length);
-		encodeFields(p,encoding_bgp_open[i].type, encoding_bgp_open[i].offset, bgp);
+		encode_fields(p,encoding_bgp_open[i].type, encoding_bgp_open[i].offset, bgp);
 		
 	}	
 }
 
 
 
-void encodeChunk(struct packet *p, unsigned char *chunkData, u_int16_t size)
+void encode_chunk(struct packet *p, unsigned char *chunkData, u_int16_t size)
 {
 		memcpy(&(p->data[p->index]), chunkData , size);
 		p->index = p->index + size;		
@@ -164,7 +164,7 @@ void encodeChunk(struct packet *p, unsigned char *chunkData, u_int16_t size)
 }
 
 
-void decodeFields(struct packet *p, int field, u_int32_t offset, void *s ){
+void decode_fields(struct packet *p, int field, u_int32_t offset, void *s ){
 	
 	unsigned char *byteArray = (unsigned char *) s;
 	int i;
@@ -216,7 +216,7 @@ void decodeFields(struct packet *p, int field, u_int32_t offset, void *s ){
 
 
 
-void decodeBGPHeader(struct packet *p, struct bgp_hdr *bgp)
+void decode_bgp_header(struct packet *p, struct bgp_hdr *bgp)
 {
 	u_int16_t size;
 	u_int16_t i;
@@ -225,12 +225,12 @@ void decodeBGPHeader(struct packet *p, struct bgp_hdr *bgp)
 	for(i=0; i < size; i++){
 		//printf("offset of %d \n" ,  encoding_bgp_hdr[i].offset);
 		//printf("isa length: %d \n", bgp->bgp_len);
-		decodeFields(p,encoding_bgp_hdr[i].type, encoding_bgp_hdr[i].offset, bgp);
+		decode_fields(p,encoding_bgp_hdr[i].type, encoding_bgp_hdr[i].offset, bgp);
 		
 	}	
 }
 
-void decodeBGPOpen(struct packet *p, struct bgp_open *bgp)
+void decode_bgp_open(struct packet *p, struct bgp_open *bgp)
 {
 	u_int16_t size;
 	u_int16_t i;
@@ -239,7 +239,7 @@ void decodeBGPOpen(struct packet *p, struct bgp_open *bgp)
 	for(i=0; i < size; i++){
 		//printf("offset of %d \n" ,  encoding_bgp_hdr[i].offset);
 		//printf("isa length: %d \n", bgp->bgp_len);
-		decodeFields(p,encoding_bgp_open[i].type, encoding_bgp_open[i].offset, bgp);
+		decode_fields(p,encoding_bgp_open[i].type, encoding_bgp_open[i].offset, bgp);
 		
 	}	
 }
