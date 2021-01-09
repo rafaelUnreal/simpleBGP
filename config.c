@@ -54,7 +54,7 @@ int config_get_neighbor(u_int32_t ip_address){
 		}
 		
 	}
-	else{ return 0; }
+	else{ return -1; }
 	
 }
 
@@ -66,6 +66,17 @@ u_int16_t config_get_asn(){
 
 	if(setting!=NULL){
 		return my_asn;
+	}
+}
+
+u_int16_t config_get_hold_time(){
+	
+	printf("config_get_hold_time()\n");
+	u_int16_t hold_time;
+	config_setting_t *setting = config_lookup_int(&cfg, "router-bgp.hold_time",&hold_time);
+
+	if(setting!=NULL){
+		return hold_time;
 	}
 }
 	
@@ -92,4 +103,6 @@ u_int32_t config_get_id(){
 		return my_asn;
 	}
 	*/
+	
+	return 3232235733; // 192.168.0.213 as integer
 }

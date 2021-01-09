@@ -32,6 +32,7 @@ struct __attribute__((__packed__)) bgp_open
 	u_int16_t	open_asn;
 	u_int16_t	open_holdTimer;
 	u_int32_t	open_id;
+	u_int8_t	optional_param_len;
 	
 };
 

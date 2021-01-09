@@ -54,7 +54,8 @@ static struct enconding_rule encoding_bgp_open[] = {
 	{ U_INT_8,		offsetof(struct bgp_open, open_version)},
 	{ U_INT_16,		offsetof(struct bgp_open, open_asn)	},
 	{ U_INT_16,		offsetof(struct bgp_open, open_holdTimer)},
-	{ U_INT_32,		offsetof(struct bgp_open, open_id)}
+	{ U_INT_32,		offsetof(struct bgp_open, open_id)},
+	{ U_INT_8,		offsetof(struct bgp_open, optional_param_len)}
 	
 };
 

@@ -129,6 +129,7 @@ void connectionPool(){
 	unsigned char buf[BUFLEN] = {0};
 	struct packet *p;
 	struct packet *BGP_reply;
+	struct packet *BGP_send;
 	
 	p = calloc(0,sizeof(struct packet));
 	
@@ -170,7 +171,7 @@ void connectionPool(){
 					else{
 						add_to_pfds(&pool_fds, s_other, &fd_count, &fd_size);
 						printf("BGP_new_connection() from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
-						BGP_new_connection(si_other.sin_addr);
+						BGP_new_connection(s_other,si_other.sin_addr);
 						
 					}
 
@@ -178,7 +179,7 @@ void connectionPool(){
 				//In case not listener fd
 				else{
 					printf("recv()\n");
-					if ((recv_len = recv(s_other, buf, BUFLEN, 0)) <= 0) {
+					if ((recv_len = recv(pool_fds[i].fd, buf, BUFLEN, 0)) <= 0) {
 						
 						if(recv_len == 0){
 							
@@ -198,15 +199,21 @@ void connectionPool(){
 					BGP_reply = BGP_event_receive(p,si_other.sin_addr);
 					
 					if(BGP_reply!=NULL){
-						sendAll(s_other,BGP_reply->data,&(BGP_reply->size));
+						printf("BGP_reply to be send; sendAll()\n");
+						sendAll(pool_fds[i].fd,BGP_reply->data,&(BGP_reply->size));
+						free(BGP_reply->data);
 						free(BGP_reply);
 					}
 				}
 			}
 			if (pool_fds[i].revents & POLLOUT){
-				BGP_event_send();
+				BGP_send = BGP_event_send(pool_fds[i].fd);
+				if(BGP_send!=NULL){
+					sendAll(pool_fds[i].fd,BGP_send->data,&(BGP_send->size));
+					
+				}
 				printf("round robin=%d\n",i);
-				sleep(2);
+				sleep(1);
 				
 				
 			}
