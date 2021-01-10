@@ -1,7 +1,7 @@
 # simpleBGP
 Implementation of BGP protocol from scratch for study purposes.
 
-TODO LIST:
+# TODO LIST:
 - Implement BGB RIB
 - Send route updates
 - Receive route updates
