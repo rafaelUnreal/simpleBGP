@@ -196,22 +196,40 @@ void connectionPool(){
 					p->data = buf;
 					p->index = 0;
 					p->size = recv_len;
+					BGP_reply = NULL;
 					BGP_reply = BGP_event_receive(p,si_other.sin_addr);
 					
 					if(BGP_reply!=NULL){
 						printf("BGP_reply to be send; sendAll()\n");
 						sendAll(pool_fds[i].fd,BGP_reply->data,&(BGP_reply->size));
-						free(BGP_reply->data);
+						
 						free(BGP_reply);
 					}
 				}
 			}
 			if (pool_fds[i].revents & POLLOUT){
+				BGP_send = NULL;
 				BGP_send = BGP_event_send(pool_fds[i].fd);
 				if(BGP_send!=NULL){
 					sendAll(pool_fds[i].fd,BGP_send->data,&(BGP_send->size));
+					if( BGP_send->status == -1){
+						printf("connection closed\n");
+						//free(BGP_send);
+						close(pool_fds[i].fd);
+						del_from_pfds(pool_fds, i, &fd_count);
+						
+					}
 					
 				}
+				/*if(BGP_send != NULL && BGP_send->status == -1){
+					
+						printf("connection closed\n");
+						//free(BGP_send);
+						close(pool_fds[i].fd);
+						del_from_pfds(pool_fds, i, &fd_count);
+					
+				}
+				*/
 				printf("round robin=%d\n",i);
 				sleep(1);
 				

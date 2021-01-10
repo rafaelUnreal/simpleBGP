@@ -15,6 +15,7 @@ struct packet
 	u_int16_t index;
 	u_int16_t data_size;
 	u_int16_t size;
+	int status;
 
 };
 
