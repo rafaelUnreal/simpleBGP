@@ -1,11 +1,12 @@
 # simpleBGP
 Implementation of BGP protocol from scratch for study purposes.
 
-# TODO LIST:
+# TODO
 - Implement BGB RIB
 - Send route updates
 - Receive route updates
 - BGP session initiator
+- BGP Notifications
 
 # Log Output
 ```bash
