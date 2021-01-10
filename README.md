@@ -7,6 +7,7 @@ Implementation of BGP protocol from scratch for study purposes.
 - Receive route updates
 - BGP session initiator
 - BGP Notifications
+- BGP Daemon
 
 # Log Output
 ```bash
