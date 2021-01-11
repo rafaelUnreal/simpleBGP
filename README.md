@@ -2,7 +2,7 @@
 Implementation of BGP protocol from scratch for study purposes.
 
 # TODO
-- Implement BGB RIB
+- Implement BGB RIB (in progress)
 - Send route updates
 - Receive route updates
 - BGP session initiator
