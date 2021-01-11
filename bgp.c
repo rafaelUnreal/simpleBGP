@@ -8,6 +8,7 @@
 #include <sys/queue.h>  // for Linkedlist
 #include <time.h>
 #include <stdint.h>
+#include "trie.h"
 #include "config.h"
 #include "packet.h"
 
@@ -397,6 +398,7 @@ int main(void)
 {
 	printf("Simple BGP. Author Rafael P.\n");
 	if(init_config()){ perror("init_config() error\n"); return 0; }
+	init_trie();
 	connectionPool();
     return 0;
 }
