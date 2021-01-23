@@ -3,9 +3,9 @@ Implementation of BGP protocol from scratch for study purposes.
 
 # TODO
 - Send route updates
-  -> Send local update advertisment(completed)
-  -> Send advertised updates(in progress)
-  -> Send withdrawn updates(in progress)
+  - Send local update advertisment(completed)
+  - Send advertised updates(in progress)
+  - Send withdrawn updates(in progress)
 - Receive route updates
 - BGP session initiator
 - BGP Notifications
