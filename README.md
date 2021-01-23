@@ -2,12 +2,15 @@
 Implementation of BGP protocol from scratch for study purposes.
 
 # TODO
-- Send route updates
+- BGP RIB using prefix trie(completed)
+- Route updates
   - Send local update advertisment(completed)
+  - Receive route updates(in progress)
   - Send advertised updates(in progress)
   - Send withdrawn updates(in progress)
-- Receive route updates
+  
 - BGP session initiator
+- Install best path from BGP RIB in GNU/Linux FIB
 - BGP Notifications
 - BGP Daemon
 
