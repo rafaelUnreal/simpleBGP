@@ -2,6 +2,16 @@
 Implementation of BGP protocol from scratch for study purposes.
 
 # TODO
+- Idle/Connect/Active/OpenConfirm/Established states(in progress)
+    - OpenConfirm state(completed)
+    - Established state(completed)
+    - Active state(completed)
+    
+- parse open message(completed)
+- parse keepalive(completed)
+- send keepalive message(completed)
+- keepalive and hold_time events(completed)
+
 - BGP RIB using prefix trie(completed)
 - Route updates
   - Send local update advertisment(completed)
