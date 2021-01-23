@@ -31,6 +31,8 @@ int init_config(){
 	
 }
 
+
+
 int config_get_neighbor(u_int32_t ip_address){
 	
 	printf("config_get_neighbor()\n");
@@ -47,7 +49,7 @@ int config_get_neighbor(u_int32_t ip_address){
 			config_setting_lookup_string(neighbor,"ip_address",&string);
 			cfg_ip = inet_addr(string); // network byte order
 			if(cfg_ip == ip_address){
-				printf("configGetNeighbor().cfg_ip == ip_address; elem = %d\n",neighbor_id);
+				//printf("configGetNeighbor().cfg_ip == ip_address; elem = %d\n",neighbor_id);
 				return neighbor_id;
 			}
 
@@ -105,4 +107,80 @@ u_int32_t config_get_id(){
 	*/
 	
 	return 3232235733; // 192.168.0.213 as integer
+}
+
+
+
+
+int get_num_prefixes(u_int32_t ip_address){
+	
+	printf("get_num_prefixes()\n");
+	config_setting_t *setting;
+	int neighbor_id;
+	setting = config_lookup(&cfg, "router-bgp.neighbors");
+	
+	if (neighbor_id = config_get_neighbor(ip_address) != -1){
+		
+		printf("NEIGHBOR ID=%d\n",neighbor_id);
+		config_setting_t *neighbor = config_setting_get_elem(setting, neighbor_id-1);
+		config_setting_t *network_settings = config_setting_get_member(neighbor, "network");
+		int count = config_setting_length(network_settings);
+		printf("COUNT ID=%d\n",count);
+		return count;
+		
+	}
+	
+	return 	-1;
+	 
+}
+
+u_int32_t get_prefix(u_int32_t ip_address, unsigned int prefix_id){
+	
+	printf("get_prefix()\n");
+	config_setting_t *setting;
+	int neighbor_id;
+	const char *prefix;
+	u_int32_t cfg_ip;
+	
+	setting = config_lookup(&cfg, "router-bgp.neighbors");
+	
+	if (neighbor_id = config_get_neighbor(ip_address) != -1){
+		
+		config_setting_t *neighbor = config_setting_get_elem(setting, neighbor_id-1);
+		config_setting_t *network_settings = config_setting_get_member(neighbor, "network");
+		config_setting_t *network_elem = config_setting_get_elem(network_settings, prefix_id);
+		if(config_setting_lookup_string(network_elem, "prefix", &prefix)){
+				return inet_addr(prefix);
+		} 	
+		
+		
+	}
+	
+	return 	0;
+	 
+}
+
+int get_prefix_len(u_int32_t ip_address, unsigned int prefix_id){
+	
+	printf("get_prefix_len()\n");
+	config_setting_t *setting;
+	int neighbor_id;
+	int prefix_len;
+	
+	setting = config_lookup(&cfg, "router-bgp.neighbors");
+	
+	if (neighbor_id = config_get_neighbor(ip_address) != -1){
+		
+		config_setting_t *neighbor = config_setting_get_elem(setting, neighbor_id-1);
+		config_setting_t *network_settings = config_setting_get_member(neighbor, "network");
+		config_setting_t *network_elem = config_setting_get_elem(network_settings, prefix_id);
+		if(config_setting_lookup_int(network_elem, "prefix_len", &prefix_len)){
+				return prefix_len;
+		} 	
+		
+		
+	}
+	
+	return 	0;
+	 
 }

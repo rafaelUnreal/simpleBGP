@@ -15,14 +15,14 @@
 
 extern int errno;
 
-int sendAll(int s, char *buf, int *len){
+int sendAll(int s, char *buf, int len){
 	
 	printf("sendAll()\n");
 	int total = 0;
-	int bytesLeft = *len; 
+	int bytesLeft = len; 
 	int n;
 	
-	while(total < *len){
+	while(total < len){
 		
 	n = send(s,buf+total, bytesLeft,0);
 	
@@ -31,7 +31,7 @@ int sendAll(int s, char *buf, int *len){
 	bytesLeft -= n;
 	}
 	
-	*len = total;
+	len = total;
 	
 	if(n == -1){
 		return -1;
@@ -183,16 +183,18 @@ void connectionPool(){
 						
 						if(recv_len == 0){
 							
-							printf("connection closed\n");
+							printf("connection closed");
 						}
 						else{
-							perror("recv\n");
+							perror("recv");
 							
 						}
 						
 						close(pool_fds[i].fd);
 						del_from_pfds(pool_fds, i, &fd_count);
+						//Implement delete_bgp_neighbor();
 					}
+					else{ 
 					p->data = buf;
 					p->index = 0;
 					p->size = recv_len;
@@ -200,10 +202,11 @@ void connectionPool(){
 					BGP_reply = BGP_event_receive(p,si_other.sin_addr);
 					
 					if(BGP_reply!=NULL){
-						printf("BGP_reply to be send; sendAll()\n");
-						sendAll(pool_fds[i].fd,BGP_reply->data,&(BGP_reply->size));
-						
+						printf("sending packet reply\n");
+						sendAll(pool_fds[i].fd,BGP_reply->data,BGP_reply->size);
 						free(BGP_reply);
+						BGP_reply = NULL;
+					}
 					}
 				}
 			}
@@ -211,12 +214,15 @@ void connectionPool(){
 				BGP_send = NULL;
 				BGP_send = BGP_event_send(pool_fds[i].fd);
 				if(BGP_send!=NULL){
-					sendAll(pool_fds[i].fd,BGP_send->data,&(BGP_send->size));
+					printf("sending packet\n");
+					sendAll(pool_fds[i].fd,BGP_send->data,BGP_send->size);
 					if( BGP_send->status == -1){
-						printf("connection closed\n");
-						//free(BGP_send);
+						printf("Error: closing connection\n");
+						free(BGP_send);
+						BGP_send = NULL;
 						close(pool_fds[i].fd);
 						del_from_pfds(pool_fds, i, &fd_count);
+						//Implement delete_bgp_neighbor();
 						
 					}
 					
